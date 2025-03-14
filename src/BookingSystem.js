@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const RoomBooking = () => {
     const [selectedRooms, setSelectedRooms] = useState([]);
     let [bookRoom, setBookRoom] = useState('');
+    let roomNumber = 101;
 
     const totalRooms = 97; // Adjust as needed
 
@@ -97,11 +98,14 @@ const RoomBooking = () => {
                         return <>
                             <div
                                 key={room}
-                                className={`border p-3 m-1 ${selectedRooms.includes(room) ? "bg-success text-white" : ""} ${room > 97 ? 'invisible' : ""}`}
+                                className={`border m-1 ${selectedRooms.includes(room) ? "bg-success text-white" : ""} ${room > 97 ? 'invisible' : ""}`}
                                 style={{width: "40px", height: "40px", textAlign: "center", cursor: "pointer"}}
                                 onClick={() => toggleRoomSelection(room)}
                             >
-                                {room}
+                                {parseInt(room % 10) === 0  ?
+                                    (parseInt(room / 10)) * 100 + 10 :
+                                    (1+parseInt(room / 10)) * 100 + (parseInt(room % 10))
+                                }
                             </div>
                         </>
                     })}
