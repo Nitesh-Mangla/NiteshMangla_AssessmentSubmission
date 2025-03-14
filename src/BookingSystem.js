@@ -4,11 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const RoomBooking = () => {
     const [selectedRooms, setSelectedRooms] = useState([]);
     let [bookRoom, setBookRoom] = useState('');
-    let roomNumber = 101;
 
+    // total no of rooms in hotel
     const totalRooms = 97; // Adjust as needed
 
     const toggleRoomSelection = (room) => {
+        // will check if room is booked then it will remove from array.
+        // if not booked then mark as booked
         setSelectedRooms((prev) =>
             prev.includes(room) ? prev.filter((r) => r !== room) : [...prev, room]
         );
@@ -34,6 +36,7 @@ const RoomBooking = () => {
             alert("You can book up to 5 rooms at a time.");
             return;
         }
+        // will calculate how much it will take to travel room to room and different floors
         calculateTime();
     };
 
@@ -48,31 +51,43 @@ const RoomBooking = () => {
     };
 
     const calculateTime = () => {
+        // set default value 0 for total time travel to visit in rooms
         let timeTravel = 0;
         let quote = 0;
         let prevRemainder = -1;
+        // loop to check which room in empty and on which floor
         for (let roomNo = 1; roomNo <= totalRooms; roomNo++) {
+            // check is room already booked
             if (!selectedRooms.includes(roomNo)) {
+                // if not booked check room is available on which floor
                 let remainder = parseInt(roomNo / 10);
+                // if room is available  then time will to take to visit per room is 1 minute
                 if (remainder === 0 || remainder === quote) {
+                    // if room is available on same floor then count + 1
                     timeTravel++;
                 } else if (remainder !== quote) {
+                    // if room is available on different floor then will take 2 minute to reach that floor
                     timeTravel += 2;
                 }
                 quote = remainder;
                 prevRemainder = remainder;
+                // how many room are going to book
                 --bookRoom;
+                // book room
                 setSelectedRooms((prev) =>
                     prev.includes(roomNo) ? prev.filter((r) => r !== roomNo) : [...prev, roomNo]
                 );
             }
+            // add 2 minute if room is not available same room
             if (prevRemainder === -1 && roomNo > 10 && roomNo % 10 === 0) {
                 timeTravel += 2;
             }
+            // flag to check room is different floor or not
             if(roomNo % 10 === 0){
                 prevRemainder = -1;
             }
 
+            // break loop if asked room has been booked
             if (bookRoom === 0) {
                 break;
             }
